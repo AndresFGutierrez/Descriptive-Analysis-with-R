@@ -1,0 +1,6 @@
+"0","graf_barras2 <- ggplot(datos_nacimientos, aes(x=`TIPO PARTO`, fill=`AREA NACIMIENTO`)) +"
+"0","  geom_bar(position=""dodge"", colour=""black"") +  # Agrupar por sexo en barras separadas (dodge)"
+"0","  labs(x=""Tipo de Parto"", y=""Cantidad de Nacimientos"", fill=""Area de nacimiento"", title=""Nacimientos registrados por área de nacimiento y tipo de parto"") +"
+"0","  theme_bw()"
+"0",""
+"0","ggplotly(graf_barras2)"

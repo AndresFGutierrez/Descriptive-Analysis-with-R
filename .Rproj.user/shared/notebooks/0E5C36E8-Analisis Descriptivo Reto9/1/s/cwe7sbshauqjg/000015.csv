@@ -1,0 +1,6 @@
+"0","moda_multiplicidad_embarazo <- datos_nacimientos %>% "
+"0","  count(`MULTIPLICIDAD EMBARAZO`) %>% "
+"0","  filter(n == max(n)) %>% # Filtrar la categoría con la mayor frecuencia"
+"0","  select(`MULTIPLICIDAD EMBARAZO`)"
+"0",""
+"0","print(moda_multiplicidad_embarazo)"

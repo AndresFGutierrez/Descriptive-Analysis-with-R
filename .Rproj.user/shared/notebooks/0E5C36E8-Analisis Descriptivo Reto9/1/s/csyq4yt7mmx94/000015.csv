@@ -1,0 +1,6 @@
+"0","moda_sexo <- datos_nacimientos %>% "
+"0","  count(SEXO) %>% "
+"0","  filter(n == max(n)) %>% # Filtrar la categoría con la mayor frecuencia"
+"0","  select(SEXO)"
+"0",""
+"0","print(moda_sexo)"

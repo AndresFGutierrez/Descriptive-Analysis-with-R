@@ -1,0 +1,8 @@
+"0","resumen_tiempo_gestacion <- datos_nacimientos %>% "
+"0","  summarise("
+"0","    media_tiempo_gestacion = mean(`TIEMPO DE GESTACIÓN`, na.rm = TRUE),"
+"0","    mediana_tiempo_gestacion = median(`TIEMPO DE GESTACIÓN`, na.rm = TRUE),"
+"0","    desv_estandar_tiempo_gestacion = sd(`TIEMPO DE GESTACIÓN`, na.rm = TRUE)"
+"0","  )"
+"0",""
+"0","print(resumen_tiempo_gestacion)"

@@ -1,0 +1,8 @@
+"0","resumen_talla <- datos_nacimientos %>% "
+"0","  summarise("
+"0","    media_talla = mean(`TALLA (Centímetros)`, na.rm = TRUE),"
+"0","    mediana_talla = median(`TALLA (Centímetros)`, na.rm = TRUE),"
+"0","    desv_estandar_talla = sd(`TALLA (Centímetros)`, na.rm = TRUE)"
+"0","  )"
+"0",""
+"0","print(resumen_talla)"

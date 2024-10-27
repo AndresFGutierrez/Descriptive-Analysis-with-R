@@ -1,0 +1,242 @@
+---
+title: "Analisis Descriptivo Reto9"
+author: "Andres Gutierrez"
+description: "Analisis de Nacidos en el Hospital San Juan de Dios"
+date: "2024-10-15"
+self_contained: true # evitando la dependencia de archivos externos.
+lang: "es"
+keywords: 
+    - "nacimientos"
+    - "hospital"
+    - "Rionegro"
+    - "análisis"
+    - "salud"
+execute: 
+  cache: true
+  echo: true
+format: 
+  revealjs:
+    theme: night
+    highlight: true #aplicará un formato de color en bloques de cod
+    highlightStyle: "github"
+    scroll: true
+    transition: fade
+    slideNumber: true  # Muestra el número de diapositiva
+    controls: true  # Mostrar controles de navegación
+---
+<style>
+/* Ajuste general para todas las diapositivas */
+.reveal .slides section {
+  max-height: 70vh;  /* Limitar la altura de la diapositiva */
+  max-width: 95vw;   /* Limitar el ancho de la diapositiva */
+  overflow-y: auto;  /* Scroll vertical si es necesario */
+  overflow-x: auto;  /* Scroll horizontal si es necesario */
+  padding: 20px;     /* Añadir espacio alrededor del contenido */
+  box-sizing: border-box;  /* Asegurarse de que el padding no afecte el tamaño total */
+}
+
+/* Estilo opcional para personalizar las barras de desplazamiento (solo en navegadores que lo soporten) */
+.reveal .slides section::-webkit-scrollbar {
+  width: 10px;  /* Ancho de la barra de desplazamiento */
+  height: 10px; /* Alto de la barra de desplazamiento horizontal */
+}
+
+.reveal .slides section::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color de la barra */
+  border-radius: 10px;    /* Bordes redondeados */
+}
+
+.reveal .slides section::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color de la barra al pasar el ratón por encima */
+}
+</style>
+
+## Cargar las librerias necesarias
+
+
+```{r, message=FALSE, eval=FALSE}
+packages <- c("readxl", "dplyr", "knitr", "kableExtra", "ggplot2", "plotly")
+installed <- packages %in% installed.packages()
+if (any(!installed)) {
+  install.packages(packages[!installed])
+}
+lapply(packages, require, character.only = TRUE)
+```
+
+## Cargar el marco de datos
+
+```{r}
+datos_nacimientos <- read_excel("./data/Nacidos Hospital San Juan de Dios Rionegro-Ant.xlsx")
+```
+
+## Análisis descriptivo
+
+Resumen del marco de datos
+
+```{r}
+summary(datos_nacimientos)
+```
+
+## Media, mediana y desviación estándar para PESO
+
+```{r}
+resumen_peso <- datos_nacimientos %>% 
+  summarise(
+    media_peso = mean(`PESO (Gramos)`, na.rm = TRUE),
+    mediana_peso = median(`PESO (Gramos)`, na.rm = TRUE),
+    desv_estandar_peso = sd(`PESO (Gramos)`, na.rm = TRUE)
+  )
+
+resumen_peso
+```
+
+## Media, mediana y desviación estándar para TALLA
+
+```{r}
+resumen_talla <- datos_nacimientos %>% 
+  summarise(
+    media_talla = mean(`TALLA (Centímetros)`, na.rm = TRUE),
+    mediana_talla = median(`TALLA (Centímetros)`, na.rm = TRUE),
+    desv_estandar_talla = sd(`TALLA (Centímetros)`, na.rm = TRUE)
+  )
+
+print(resumen_talla)
+```
+## Media, mediana y desviación estándar para TIEMPO DE GESTACION
+
+```{r}
+resumen_tiempo_gestacion <- datos_nacimientos %>% 
+  summarise(
+    media_tiempo_gestacion = mean(`TIEMPO DE GESTACIÓN`, na.rm = TRUE),
+    mediana_tiempo_gestacion = median(`TIEMPO DE GESTACIÓN`, na.rm = TRUE),
+    desv_estandar_tiempo_gestacion = sd(`TIEMPO DE GESTACIÓN`, na.rm = TRUE)
+  )
+
+print(resumen_tiempo_gestacion)
+```
+
+## Media, mediana y desviación estándar para CONSULTAS PRENATALES
+
+```{r}
+resumen_consultas_prenatales <- datos_nacimientos %>% 
+  summarise(
+    media_consultas_prenatales = mean(`CONSULTAS PRENATALES`, na.rm = TRUE),
+    mediana_consultas_prenatales = median(`CONSULTAS PRENATALES`, na.rm = TRUE),
+    desv_estandar_consultas_prenatales = sd(`CONSULTAS PRENATALES`, na.rm = TRUE)
+  )
+
+print(resumen_consultas_prenatales)
+```
+
+## Moda para la variable sexo 
+
+```{r}
+moda_sexo <- datos_nacimientos %>% 
+  count(SEXO) %>% 
+  filter(n == max(n)) %>% # Filtrar la categoría con la mayor frecuencia
+  select(SEXO)
+
+print(moda_sexo)
+```
+
+## Moda para la variable multiplicidad de embarazo 
+
+```{r}
+moda_multiplicidad_embarazo <- datos_nacimientos %>% 
+  count(`MULTIPLICIDAD EMBARAZO`) %>% 
+  filter(n == max(n)) %>% # Filtrar la categoría con la mayor frecuencia
+  select(`MULTIPLICIDAD EMBARAZO`)
+
+print(moda_multiplicidad_embarazo)
+```
+
+## Medida agrupando una variable (Group by): cantidad de nacimientos por área nacimiento.
+
+```{r}
+cant_nacimientos_por_area <- datos_nacimientos %>% 
+  group_by(`AREA NACIMIENTO`) %>%
+  summarise(cant_nac = n())
+
+print(cant_nacimientos_por_area)
+```
+
+## Medida con información filtrada (Filter): peso y talla promedio de los niños con siete o más consultas prenatales y cantidad de niños con padres mayores a 35 años.
+
+```{r}
+#peso y talla promedio de los niños con siete o más consultas prenatales
+medida_filtrada <- datos_nacimientos %>% 
+  filter(`CONSULTAS PRENATALES` >= 7) %>%
+  summarise(
+    prom_peso = mean(`PESO (Gramos)`, na.rm = TRUE),      
+    prom_talla = mean(`TALLA (Centímetros)`, na.rm = TRUE)
+  )
+  
+#cantidad de niños con padres mayores a 35 años.
+cant_padres_may <- datos_nacimientos %>% 
+  filter(`EDAD PADRE` > 35) %>% 
+  summarise(cantidad = n())
+
+print(medida_filtrada)
+print(cant_padres_may)
+```
+
+## Análisis descriptivo a partir de gráficos
+
+Gráfico de barras, nacimientos registrados por sexo y tipo de parto
+
+```{r}
+graf_barras <- ggplot(datos_nacimientos, aes(x=`TIPO PARTO`, fill=SEXO)) +
+  geom_bar(position="dodge", colour="black") +  # Agrupar por sexo en barras separadas (dodge)
+  labs(x="Tipo de Parto", y="Cantidad de Nacimientos", fill="Sexo", title="Nacimientos registrados por sexo y tipo de parto") +
+  scale_fill_manual(values = c("pink", "skyblue")) +  # Colores personalizados para cada sexo
+  theme_bw()
+
+ggplotly(graf_barras)
+```
+
+## Análisis descriptivo a partir de gráficos
+
+Gráfico de barras, nacimientos registrados por área de nacimiento y tipo de parto
+
+```{r}
+graf_barras2 <- ggplot(datos_nacimientos, aes(x=`TIPO PARTO`, fill=`AREA NACIMIENTO`)) +
+  geom_bar(position="dodge", colour="black") +  # Agrupar por sexo en barras separadas (dodge)
+  labs(x="Tipo de Parto", y="Cantidad de Nacimientos", fill="Area de nacimiento", title="Nacimientos registrados por área de nacimiento y tipo de parto") +
+  theme_bw()
+
+ggplotly(graf_barras2)
+```
+
+## Análisis descriptivo a partir de gráficos
+
+Gráfico de dispersión: variable peso vs. talla.
+
+```{r}
+graf_dispersion <- ggplot(datos_nacimientos, aes(x=`PESO (Gramos)`, y=`TALLA (Centímetros)`, colour=`PESO (Gramos)`))+
+  geom_point(size=2) +
+  scale_color_gradient(low = "orange", high = "red")+
+  labs(x="Peso (Gramos)", y="Talla (Centímetros)", colour="Peso (Gramos)", title="Variable peso vs. talla") +
+  theme_dark()
+
+ggplotly(graf_dispersion)
+```
+
+## Conclusiones 
+
+Primer gráfico (Nacimientos registrados por sexo y tipo de parto):
+
+- Los nacimientos por cesárea son más frecuentes en los nacimientos masculinos que en los femeninos.
+- En los nacimientos espontáneos, tanto para hombres como para mujeres, la cantidad es muy similar, sin embargo, se evidencia una pequeña diferencia siendo superior los nacimientos femeninos.
+- El parto instrumentado es el menos común, con un número casi insignificante en comparación con los otros tipos de parto, pero se logra ver una minima diferencia, siendo mas frecuentes los nacimientos masculinos.
+
+Segundo Grafico (Nacimientos registrados por área de nacimiento y tipo de parto)
+
+- Todos los nacimientos ocurren en la cabecera municipal, tanto para cesáreas, partos espontáneos e instrumentado.
+- El numero de nacimientos espontaneos es el mas alto, ocurriendo en su totalidad en la cabecera municipal.
+- El número de nacimientos instrumentados es muy bajo, siendo casi imposible sacar conclusiones.
+
+Tercer Grafico (Variable peso vs. talla)
+
+- Existe una correlación positiva entre el peso y la talla de los recién nacidos: a mayor peso, mayor talla.
+- La mayoría de los recién nacidos tienen un peso que varía entre 2500 y 3500 gramos, con una talla entre 45 y 55 centímetros.
+- Los datos también muestran una concentración de puntos hacia la parte superior de la escala de peso y talla, sugiriendo que la mayoría de los recién nacidos están dentro de rangos normales.

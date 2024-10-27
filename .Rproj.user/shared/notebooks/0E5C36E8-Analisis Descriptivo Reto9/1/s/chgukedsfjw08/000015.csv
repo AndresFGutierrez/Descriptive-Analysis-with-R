@@ -1,0 +1,5 @@
+"0","cant_nacimientos_por_area <- datos_nacimientos %>% "
+"0","  group_by(`AREA NACIMIENTO`) %>%"
+"0","  summarise(cant_nac = n())"
+"0",""
+"0","print(cant_nacimientos_por_area)"
